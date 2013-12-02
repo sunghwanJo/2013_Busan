@@ -11,6 +11,7 @@ from app.lusponse.lusponse import Lusponse
 
 #Import Models
 from app.users.models import User
+from app.books.models import Book, BookRegister
 
 os.environ['PYTHONINSPECT'] = 'True'
 

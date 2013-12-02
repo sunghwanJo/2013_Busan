@@ -1,3 +1,4 @@
+#-*- coding:utf8 -*-
 from app import db
 
 from datetime import datetime
