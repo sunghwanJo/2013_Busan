@@ -1,6 +1,7 @@
 from app import db
 
 from datetime import datetime
+import base64
 
 class Book(db.Model):
 	__tablename__ = 'book'
@@ -15,21 +16,24 @@ class Book(db.Model):
 
 	def __init__(self, image=None, title='', author='', publish='', status='', sharing=''):
 		self.image = image
-		self.title = title
-		self.author = author
-		self.publish = publish
+		self.title = base64.encodestring(title)
+		self.author = base64.encodestring(author)
+		self.publish = base64.encodestring(publish)
 		self.status = status
 		self.sharing = sharing
 
 	def __repr__(self):
-		return '<Book %r>' % (self.title)
+		return '<Book %r>' % (base64.decodestring(self.title))
 
 	def commit(self):
-		try:
-			db.session.add(self)
-			db.session.commit()
-		except Exception, e:
-			raise Exception('NotExistUser')
+		db.session.add(self)
+		db.session.commit()
+
+	@classmethod
+	def get_book_with_title(cls, title):
+		title = base64.encodestring(title)
+		return cls.query.filter_by(title=title).all()
+
 
 class BookRegister(db.Model):
 	__tablename__ = 'book_register'
@@ -38,13 +42,12 @@ class BookRegister(db.Model):
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 	register_date = db.Column(db.DateTime, default=datetime.now())
 
-	def __init__(self, id, user_id, register_date):
+	def __init__(self, id, user_id):
 		self.id = id
 		self.user_id = user_id
-		self.register_date = register_date	
 
 	def __repr__(self):
-		return '<BookRegister %r>' % (self.title)
+		return '<BookRegister %r %r %r>' % (self.id, self.user_id, self.register_date)
 
 	def commit(self):
 		db.session.add(self)

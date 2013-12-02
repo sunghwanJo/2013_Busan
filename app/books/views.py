@@ -1,28 +1,37 @@
 from flask import Blueprint, request
 
 from flask.views import View
+from app.lusponse.lusponse import Lusponse
+from app.books.models import Book, BookRegister
 
 mod = Blueprint('books', __name__, url_prefix='/books')
-"""
-class SignUp(View):
+
+class BookShared(View):
 	methods = ['POST']
 
 	def dispatch_request(self):
 		try:
-			pass
+			user_id = int(request.form['userID'])
+			title = request.form['bookTitle'].encode('utf-8')
+			publish = request.form['bookPublish'].encode('utf-8')
+			status = request.form['bookStatus'].encode('utf-8')
+			author = request.form['bookAuthor'].encode('utf-8')
+			sharing = request.form['bookSharing'].encode('utf-8')
+
+			b = Book('', title, author, publish, status, sharing)
+			b.commit()
+
+			b = Book.get_book_with_title(title)
+			b = b.pop()
+
+			br = BookRegister(b.id, user_id)
+			br.commit()
+
+			response = Lusponse.make_success_response('success book share', '')
+			return response
+
 		except Exception, e:
-			pass
+			response = Lusponse.make_fail_response('fail book share', "%r"%e)
+			return response
 
-class SignIn(View):
-	methods = ['POST']
-
-	def dispatch_request(self):
-		try:
-			pass
-		except Exception, e:
-			pass
-
-
-mod.add_url_rule('/signup/', view_func=SignUp.as_view('signup_user'))
-mod.add_url_rule('/signin/', view_func=SignIn.as_view('signin_user'))
-"""
+mod.add_url_rule('/share/', view_func=BookShared.as_view('bookshared'))

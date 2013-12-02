@@ -5,6 +5,7 @@ from flask.ext.testing import TestCase
 
 from app import app, db
 from app.users.models import User
+from app.books.models import Book, BookRegister
 
 import json
 
@@ -23,6 +24,19 @@ class ManyTest(TestCase):
     def tearDown(self):
         db.session.remove()
         db.drop_all()
+
+    def test_book_shared(self):
+        rv = self.sign_up(131072, '조성환', '2074', '01087662074')
+        rv = json.loads(rv.data)
+        assert rv.get('code') == 'success'
+
+        rv = self.book_share(131072, 'Jo', 'Sung', 'hwan', '0', '1')
+        rv = json.loads(rv.data)
+        assert rv.get('code') == 'success'
+
+        assert Book.query.count() == 1
+        assert BookRegister.query.count() == 1
+
 
     def test_sinup(self):
         #Sign Up Test
@@ -56,6 +70,16 @@ class ManyTest(TestCase):
         return self.client.post('/users/signin/', data = dict(
             userID=user_id,
             userPassword=user_password,
+            ), follow_redirects=True)
+
+    def book_share(self, user_id, title ,author ,publish ,status , sharing):
+        return self.client.post('/books/share/', data = dict(
+            userID=user_id,
+            bookTitle=title,
+            bookAuthor=author,
+            bookPublish=publish,
+            bookStatus=status,
+            bookSharing=sharing
             ), follow_redirects=True)
 
 if __name__ == '__main__':
