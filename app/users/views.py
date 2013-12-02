@@ -5,6 +5,9 @@ from flask.views import View
 from app.users.models import User
 from app.lusponse.lusponse import Lusponse
 
+from sqlalchemy.exc import IntegrityError
+from app import db
+
 mod = Blueprint('users', __name__, url_prefix='/users')
 
 class SignUp(View):
@@ -16,6 +19,9 @@ class SignUp(View):
 			name = request.form['userName'].encode('utf-8')
 			password = request.form['userPassword'].encode('utf-8')
 			phone = request.form['userPhone'].encode('utf-8')
+
+			if User.query.filter_by(id=id).first() != None:
+				raise Exception('IntegrityError')
 
 			u = User(id, name, password, phone)
 			u.commit()
@@ -34,7 +40,7 @@ class SignIn(View):
 		try:
 			id = int(request.form['userID'])
 			password = request.form['userPassword']
-			
+
 			u = User.get_user(id, password)
 			if u == None:
 				raise Exception('NotExistUser')

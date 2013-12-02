@@ -2,13 +2,17 @@
 from app import db
 import base64
 
+from app.books.models import BookRegister
+
 class User(db.Model):
 	__tablename__ = 'user'
 
 	id = db.Column(db.Integer, primary_key = True)
-	name = db.Column(db.String(40), unique=True)
+	name = db.Column(db.String(40))
 	password = db.Column(db.String(30))
 	phone = db.Column(db.String(15))
+
+	book_register = db.relationship('BookRegister', backref='user', lazy='dynamic')
 
 	def __init__(self, id=None, name=None, password=None, phone=None):
 		self.id=id
@@ -28,5 +32,6 @@ class User(db.Model):
 
 	@classmethod
 	def get_user(cls, id, password):
+		password = password
 		u=User.query.filter_by(id=id, password=password).first()
 		return u

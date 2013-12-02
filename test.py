@@ -33,7 +33,7 @@ class ManyTest(TestCase):
         rv = self.sign_up(131072, '조성환', '2074', '01087662074')
         rv = json.loads(rv.data)
         assert rv.get('code') == 'fail'
-    def test_sinin(self):
+        
         #Sign In Test
         rv = self.sign_in(131072,'WrongPassword')
         rv = json.loads(rv.data)
@@ -41,7 +41,8 @@ class ManyTest(TestCase):
 
         rv = self.sign_in(131072,'2074')
         rv = json.loads(rv.data)
-        print rv.get('code') == 'success'
+        assert rv.get('code') == 'success'
+        
 
     def sign_up(self, user_id, user_name, user_password, user_phone):
         return self.client.post('/users/signup/', data = dict(
