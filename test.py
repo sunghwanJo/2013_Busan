@@ -37,6 +37,11 @@ class ManyTest(TestCase):
         assert Book.query.count() == 1
         assert BookRegister.query.count() == 1
 
+        rv = self.book_share(131072, '조', '성', '환', '0', '1')
+        rv = json.loads(rv.data)
+        assert rv.get('code') == 'success'
+
+        print Book.query.all()
 
     def test_sinup(self):
         #Sign Up Test

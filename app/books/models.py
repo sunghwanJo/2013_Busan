@@ -24,7 +24,7 @@ class Book(db.Model):
 		self.sharing = sharing
 
 	def __repr__(self):
-		return '<Book %r>' % (base64.decodestring(self.title))
+		return '<Book %s %s %s>' % (base64.decodestring(self.title), base64.decodestring(self.author), base64.decodestring(self.publish))
 
 	def commit(self):
 		db.session.add(self)
