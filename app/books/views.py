@@ -58,7 +58,7 @@ class BookSupply(View):
 			bookID = int(request.form['bookID'])
 			Book.set_view_flag(bookID)
 
-			response = Lusponse.make_success_response('success change view flag', books)
+			response = Lusponse.make_success_response('success change view flag', '')
 			return response
 
 		except Exception, e:
