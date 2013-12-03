@@ -42,9 +42,8 @@ class Book(db.Model):
 		for book in Book.query.all():
 			book_title = base64.decodestring(book.title)
 			if title in book_title:
-				phone = BookRegister.query.filter_by(id=book.id).first().user.phone
 				book_info = [book.id, book_title, base64.decodestring(book.author), \
-					base64.decodestring(book.publish), book.status, book.sharing, phone]
+					base64.decodestring(book.publish), book.status, book.sharing]
 				book_list.append(book_info)
 		book_list.reverse()
 		return book_list
