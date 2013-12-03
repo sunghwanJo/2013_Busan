@@ -45,8 +45,8 @@ class Book(db.Model):
 				book_info = [book.id, book_title, base64.decodestring(book.author), \
 					base64.decodestring(book.publish), book.status, book.sharing]
 				book_list.append(book_info)
-		
-		return book_list.reverse()
+		book_list.reverse()
+		return book_list
 
 class BookRegister(db.Model):
 	__tablename__ = 'book_register'
