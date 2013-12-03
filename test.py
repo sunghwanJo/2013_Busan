@@ -25,6 +25,17 @@ class ManyTest(TestCase):
         db.session.remove()
         db.drop_all()
 
+    def test_book_search(self):
+
+        title_list = ['hi', 'manhi', 'hihi', 'manh', 'adsf']
+        for title in title_list:
+            b = Book('', title, 'a', 'b', '1', '1')
+            b.commit()
+
+        rv = self.book_search('hi')
+        rv = json.loads(rv.data)
+        assert rv.get('code') == 'success'
+
     def test_book_shared(self):
         rv = self.sign_up(131072, '조성환', '2074', '01087662074')
         rv = json.loads(rv.data)
@@ -40,8 +51,6 @@ class ManyTest(TestCase):
         rv = self.book_share(131072, '조', '성', '환', '0', '1')
         rv = json.loads(rv.data)
         assert rv.get('code') == 'success'
-
-        print Book.query.all()
 
     def test_sinup(self):
         #Sign Up Test
@@ -86,6 +95,9 @@ class ManyTest(TestCase):
             bookStatus=status,
             bookSharing=sharing
             ), follow_redirects=True)
-
+    def book_search(self, bookname):
+        return self.client.post('/books/search/', data=dict(
+            bookName = bookname
+            ), follow_redirects=True)
 if __name__ == '__main__':
     unittest.main()

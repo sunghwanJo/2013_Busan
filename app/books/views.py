@@ -35,4 +35,20 @@ class BookShared(View):
 			response = Lusponse.make_fail_response('fail book share', "%r"%e)
 			return response
 
+class BookSearch(View):
+	methods = ['POST']
+
+	def dispatch_request(self):
+		try:
+			bookname = request.form['bookName'].encode('utf-8')
+
+			books = Book.search_books_with_title(bookname)
+			response = Lusponse.make_success_response('success book search', books)
+			return response
+
+		except Exception, e:
+			response = Lusponse.make_fail_response('fail book search', "%r"%e)
+			return response
+
 mod.add_url_rule('/share/', view_func=BookShared.as_view('bookshared'))
+mod.add_url_rule('/search/', view_func=BookSearch.as_view('booksearch'))

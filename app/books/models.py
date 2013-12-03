@@ -25,16 +25,28 @@ class Book(db.Model):
 
 	def __repr__(self):
 		return '<Book %s %s %s>' % (base64.decodestring(self.title), base64.decodestring(self.author), base64.decodestring(self.publish))
-
+		
 	def commit(self):
 		db.session.add(self)
 		db.session.commit()
+
 
 	@classmethod
 	def get_book_with_title(cls, title):
 		title = base64.encodestring(title)
 		return cls.query.filter_by(title=title).all()
 
+	@classmethod
+	def search_books_with_title(cls, title):		
+		book_list = []
+		for book in Book.query.all():
+			book_title = base64.decodestring(book.title)
+			if title in book_title:
+				book_info = [book.id, book_title, base64.decodestring(book.author), \
+					base64.decodestring(book.publish), book.status, book.sharing]
+				book_list.append(book_info)
+		
+		return book_list.reverse()
 
 class BookRegister(db.Model):
 	__tablename__ = 'book_register'
