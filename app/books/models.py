@@ -14,6 +14,7 @@ class Book(db.Model):
 	publish = db.Column(db.String(40))
 	status = db.Column(db.String(1))
 	sharing = db.Column(db.String(1))
+	view_flag = db.Column(db.Boolean, default=True)
 
 	def __init__(self, image=None, title='', author='', publish='', status='', sharing=''):
 		self.image = image
@@ -29,7 +30,11 @@ class Book(db.Model):
 	def commit(self):
 		db.session.add(self)
 		db.session.commit()
-
+	@classmethod
+	def set_view_flag(cls, id):
+		b = cls.query.filter_by(id=id).first()
+		b.view_flag = False
+		db.session.commit()
 
 	@classmethod
 	def get_book_with_title(cls, title):
@@ -39,7 +44,7 @@ class Book(db.Model):
 	@classmethod
 	def search_books_with_title(cls, title):		
 		book_list = []
-		for book in Book.query.all():
+		for book in Book.query.filter_by(view_flag=True).all():
 			book_title = base64.decodestring(book.title)
 			if title in book_title:
 				book_info = [book.id, book_title, base64.decodestring(book.author), \

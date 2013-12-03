@@ -9,6 +9,8 @@ from app.books.models import Book, BookRegister
 
 import json
 
+from pprint import pprint
+
 class ManyTest(TestCase):
 
     SQLALCHEMY_DATABASE_URI = "sqlite://"
@@ -34,7 +36,16 @@ class ManyTest(TestCase):
 
         rv = self.book_search('hi')
         rv = json.loads(rv.data)
+        pprint(rv)
         assert rv.get('code') == 'success'
+
+        print '----------- after set flag-----------'
+        Book.set_view_flag(1)
+        rv = self.book_search('hi')
+        rv = json.loads(rv.data)
+        pprint(rv)
+
+
 
     def test_book_shared(self):
         rv = self.sign_up(131072, '조성환', '2074', '01087662074')
