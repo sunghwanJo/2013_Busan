@@ -65,6 +65,24 @@ class BookSupply(View):
 			response = Lusponse.make_fail_response('fail change view flag', "%r"%e)
 			return response
 
+class GetUserInfo(View):
+	methods = ['POST']
+
+	def dispatch_request(self):
+		try:
+			bookID = int(request.form['bookID'])
+
+			u = BookRegister.query.filter_by(id=id).first().user
+
+			data = [u.id, u.phone]
+			response = Lusponse.make_success_response('success get user Info', data)
+			return response
+
+		except Exception, e:
+			response = Lusponse.make_fail_response('fail get user Info', "%r"%e)
+			return response
+
 mod.add_url_rule('/share/', view_func=BookShared.as_view('bookshared'))
 mod.add_url_rule('/search/', view_func=BookSearch.as_view('booksearch'))
 mod.add_url_rule('/supply/', view_func=BookSupply.as_view('booksupply'))
+mod.add_url_rule('/getuser/', view_func=GetUserInfo.as_view('getuserwithbook'))

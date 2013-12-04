@@ -3,6 +3,7 @@ from flask import Blueprint, request
 from flask.views import View
 
 from app.users.models import User
+from app.books.models import BookRegister
 from app.lusponse.lusponse import Lusponse
 
 from sqlalchemy.exc import IntegrityError
@@ -50,7 +51,6 @@ class SignIn(View):
 		except Exception, e:
 			response = Lusponse.make_fail_response('fail sign in', "%r"%e)
 			return response
-
 
 mod.add_url_rule('/signup/', view_func=SignUp.as_view('signup_user'))
 mod.add_url_rule('/signin/', view_func=SignIn.as_view('signin_user'))
