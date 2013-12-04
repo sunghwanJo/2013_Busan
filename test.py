@@ -36,15 +36,14 @@ class ManyTest(TestCase):
 
         rv = self.book_search('hi')
         rv = json.loads(rv.data)
-        pprint(rv)
+        #pprint(rv)
         assert rv.get('code') == 'success'
 
         print '----------- after set flag-----------'
         Book.set_view_flag(1)
         rv = self.book_search('hi')
         rv = json.loads(rv.data)
-        pprint(rv)
-
+        #pprint(rv)
 
 
     def test_book_shared(self):
@@ -60,6 +59,11 @@ class ManyTest(TestCase):
         assert BookRegister.query.count() == 1
 
         rv = self.book_share(131072, '조', '성', '환', '0', '1')
+        rv = json.loads(rv.data)
+        assert rv.get('code') == 'success'
+
+
+        rv = self.get_user_info_with_book(1)
         rv = json.loads(rv.data)
         assert rv.get('code') == 'success'
 
@@ -109,6 +113,11 @@ class ManyTest(TestCase):
     def book_search(self, bookname):
         return self.client.post('/books/search/', data=dict(
             bookName = bookname
+            ), follow_redirects=True)
+
+    def get_user_info_with_book(self, book_id):
+        return self.client.post('/books/getuser/', data=dict(
+            bookID = book_id
             ), follow_redirects=True)
 if __name__ == '__main__':
     unittest.main()

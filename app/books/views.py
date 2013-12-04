@@ -72,7 +72,7 @@ class GetUserInfo(View):
 		try:
 			bookID = int(request.form['bookID'])
 
-			u = BookRegister.query.filter_by(id=id).first().user
+			u = BookRegister.query.filter_by(id=bookID).first().user
 
 			data = [u.id, u.phone]
 			response = Lusponse.make_success_response('success get user Info', data)
