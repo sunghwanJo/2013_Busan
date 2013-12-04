@@ -12,6 +12,8 @@ class BookShared(View):
 
 	def dispatch_request(self):
 		try:
+			
+			print request.form
 			user_id = int(request.form['userID'])
 			title = request.form['bookTitle'].encode('utf-8')
 			publish = request.form['bookPublish'].encode('utf-8')
