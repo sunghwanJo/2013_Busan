@@ -19,6 +19,8 @@ class BookShared(View):
 			author = request.form['bookAuthor'].encode('utf-8')
 			sharing = request.form['bookSharing'].encode('utf-8')
 
+			print "%r %r %r"%(title, publish, status)
+
 			b = Book('', title, author, publish, status, sharing)
 			b.commit()
 
